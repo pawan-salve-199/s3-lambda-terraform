@@ -1,0 +1,25 @@
+# 1. Automatically zip up your Python code folder
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/src"
+  output_path = "${path.module}/lambda_function.zip"
+}
+
+# 2. Define the Lambda Function in AWS
+resource "aws_lambda_function" "s3_processor" {
+  filename         = data.archive_file.lambda_zip.output_path
+  function_name    = "s3-file-processor-${var.environment}"
+  role             = aws_iam_role.lambda_role.arn
+  handler          = "lambda_function.lambda_handler"
+  runtime          = "python3.11"
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+}
+
+# 3. Explicitly allow your S3 bucket to wake up your Lambda function
+resource "aws_lambda_permission" "allow_s3" {
+  statement_id  = "AllowS3Invoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.s3_processor.function_name
+  principal     = "s3.amazonaws.com"
+  source_arn    = aws_s3_bucket.landing_bucket.arn
+}
