@@ -1,0 +1,29 @@
+name: Deploy to Dev
+on:
+  push:
+    branches: [main] # Automatically fires when code is merged into main (Dev)
+
+permissions:
+  id-token: write  # Crucial: Allows requesting the OIDC token from AWS
+  contents: read   # Allows checking out your project files
+
+jobs:
+  build-dev:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform Core
+      uses: hashicorp/setup-terraform@v3
+    
+    - name: OIDC Handshake with AWS
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::801265893215:role/github-actions-deploy-role
+        aws-region: us-east-1
+
+    - name: Terraform Deploy to Dev
+      run: |
+        terraform init
+        terraform apply -var="environment=dev" -auto-approve

@@ -1,0 +1,29 @@
+name: Deploy to QA
+on:
+  push:
+    branches: [qa] # Automatically fires when code is merged into qa
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-qa:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform Core
+      uses: hashicorp/setup-terraform@v3
+    
+    - name: OIDC Handshake with AWS
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::801265893215:role/github-actions-deploy-role
+        aws-region: us-east-1
+
+    - name: Terraform Deploy to QA
+      run: |
+        terraform init
+        terraform apply -var="environment=qa" -auto-approve
