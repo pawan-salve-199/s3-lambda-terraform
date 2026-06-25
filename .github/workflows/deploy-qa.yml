@@ -7,6 +7,12 @@ permissions:
   id-token: write
   contents: read
 
+
+# ADD THIS NEW DEFAULTS BLOCK HERE:
+defaults:
+  run:
+    working-directory: ./s3-lambda-terraform
+
 jobs:
   build-qa:
     runs-on: ubuntu-latest

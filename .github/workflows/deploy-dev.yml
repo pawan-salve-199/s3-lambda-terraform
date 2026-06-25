@@ -7,6 +7,11 @@ permissions:
   id-token: write  # Crucial: Allows requesting the OIDC token from AWS
   contents: read   # Allows checking out your project files
 
+# ADD THIS NEW DEFAULTS BLOCK HERE:
+defaults:
+  run:
+    working-directory: ./s3-lambda-terraform
+
 jobs:
   build-dev:
     runs-on: ubuntu-latest
