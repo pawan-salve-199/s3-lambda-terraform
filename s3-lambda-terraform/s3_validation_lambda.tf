@@ -7,10 +7,10 @@ data "archive_file" "lambda_validation_zip" {
 
 # 2. Define the Lambda Function in AWS
 resource "aws_lambda_function" "s3_lambda_validation" {
-  filename         = data.archive_file.lambda_zip.output_path
+  filename         = data.archive_file.lambda_validation_zip.output_path
   function_name    = "s3-file-validation-${var.environment}"
   role             = aws_iam_role.lambda_role.arn
-  handler          = "s3_lambda_validation.lambda_handler"
+  handler          = "Lambda_validation.lambda_handler"
   runtime          = "python3.11"
   source_code_hash = data.archive_file.lambda_validation_zip.output_base64sha256
 }
