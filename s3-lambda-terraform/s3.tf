@@ -17,7 +17,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 }
 
 # 2. Build the final trigger rule linking S3 to Lambda validation
-resource "aws_s3_bucket_notification" "bucket_notification" {
+resource "aws_s3_bucket_notification" "bucket_validation_notification" {
   bucket = aws_s3_bucket.landing_bucket.id 
 
   lambda_function {
