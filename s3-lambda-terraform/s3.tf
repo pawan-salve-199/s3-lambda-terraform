@@ -6,10 +6,22 @@ resource "aws_s3_bucket" "landing_bucket" {
 
 # 2. Build the final trigger rule linking S3 to Lambda
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = aws_s3_bucket.landing_bucket.id
+  bucket = aws_s3_bucket.landing_bucket.id 
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.s3_processor.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [aws_lambda_permission.allow_s3]
+}
+
+# 2. Build the final trigger rule linking S3 to Lambda validation
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  bucket = aws_s3_bucket.landing_bucket.id 
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.s3_lambda_validation.arn
     events              = ["s3:ObjectCreated:*"]
   }
 
