@@ -1,7 +1,7 @@
 # 1. Automatically zip up your Python code folder
 data "archive_file" "lambda_validation_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/src"
+  source_dir  = "${path.module}/../src"
   output_path = "${path.module}/Lambda_validation.zip"
 }
 
