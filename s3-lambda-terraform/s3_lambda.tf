@@ -5,11 +5,11 @@ data "archive_file" "lambda_zip" {
   output_path = "${path.module}/lambda_function.zip"
 }
 
-# 2. Define the Lambda Function in AWS
+# 2. Define the Lambda Function in AWS using OIDC
 resource "aws_lambda_function" "s3_processor" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = "s3-file-processor-${var.environment}"
-  role             = aws_iam_role.lambda_role.arn
+  role             = aws_iam_role.lambda_role.arn 
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.11"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256

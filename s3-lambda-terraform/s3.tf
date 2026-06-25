@@ -6,7 +6,7 @@ resource "aws_s3_bucket" "landing_bucket" {
 
 # 2. Build the final trigger rule linking S3 to Lambda
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  bucket = aws_s3_bucket.landing_bucket.id 
+  bucket = aws_s3_bucket.landing_bucket.id #interpolation
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.s3_processor.arn
